@@ -1,6 +1,6 @@
 #!/bin/bash
 
 rm allMan
-rm manuellaTitles
+rm manTitles
 rm ManuellaRegexR.class
 rm -rf man/

@@ -19,7 +19,7 @@ public class ManuellaRegexR {
         Pattern pattern = Pattern.compile(REGEX);
 
         //TODO - add logic verfing and extracting params from cli(args)
-        File allMan = new File(args.length > 1 ? args[1] : args[0]);
+        File allMan = new File(args[0]);  //(args.length > 1 ? args[1] : args[0]);
 
         //TODO - check that the file is valid.
 
@@ -32,7 +32,7 @@ public class ManuellaRegexR {
         }
 
 
-        File manTitles = new File(OUTPUT_FILE);
+        File manTitles = new File(args[1]);
 
         if (manTitles.exists()) {
             System.out.println("The output file already exixts! Do you want to delete it? [Y/n]");
@@ -73,7 +73,10 @@ public class ManuellaRegexR {
 
                 oldTitle = match;
 
-                if (isVerbose) System.out.println(line + '\n' + "\t -> " + match + '\n');
+                if (isVerbose){
+                    System.out.println(line);
+                    System.out.println("----" + match);
+                }
                 try {
                     fileWriter.write(match + '\n');
                 }catch (IOException e){
@@ -81,6 +84,6 @@ public class ManuellaRegexR {
                 }
             }
         }
-
+        System.out.println(manTitles);
     }
 }
