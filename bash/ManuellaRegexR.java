@@ -1,35 +1,59 @@
-
-import java.util.Scanner;
 import java.io.*;
-import java.util.regex.Pattern;
+import java.util.Scanner;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class ManuellaRegexR{
+public class ManuellaRegexR {
 
-    private static boolean isVerbose = false;
-    private static final String OUTPUT_FILE = "mauellaTitles";
+    private static final String OUTPUT_FILE = "manuellaTitles";
     private static final String REGEX = "^[\\w\\.\\:]+";
+    private static boolean isVerbose = true;
 
-    public static void main(String ... args){
+    public static void main(String... args) {
+
+        Scanner fileReader;
+        FileWriter fileWriter;
+        String oldTitle = "";
 
         Scanner sc = new Scanner(System.in);
-        Pattern regPat = Pattern.compile(REGEX);
+        Pattern pattern = Pattern.compile(REGEX);
 
-	//TODO - add logic verfing and extracting params from cli(args)
+        //TODO - add logic verfing and extracting params from cli(args)
         File allMan = new File(args.length > 1 ? args[1] : args[0]);
-        
-	//TODO - check that the file is valid.
 
-        Scanner reader;
+        //TODO - check that the file is valid.
+
+
         try {
-            reader = new Scanner(allMan);
-        } catch ( FileNotFoundException e ) { //TODO - on FnF request new file or maybe even start the file-creating script?
+            fileReader = new Scanner(allMan);
+        } catch (FileNotFoundException e) { //TODO - on FnF request new file or maybe even start the file-creating script?
             System.out.println("FILE NOT FOUND! EXITING...!");
             return;
         }
 
-        
+
         File manTitles = new File(OUTPUT_FILE);
+
+        if (manTitles.exists()) {
+            System.out.println("The output file already exixts! Do you want to delete it? [Y/n]");
+
+            char ans = sc.next().charAt(0);
+            if (ans == 'n' || ans == 'N') {
+                System.out.println("'mkay then. Leavving. Please restart me when you are ready to commit to the goal.");
+                System.out.println("exiting...");  //TODO - again.. take user input instead of bitiching out and exiting. 
+                return;
+            }
+
+            manTitles.delete();
+        }
+        
+        try {
+            manTitles.createNewFile();
+            fileWriter = new FileWriter(manTitles);
+        } catch (IOException e) {
+            System.out.println("File creation failed. Aborting...");
+            return;
+        }
 
         if(!manTitles.canWrite()){
             System.out.println("I don't have permission to to do 'mah job! I'm leaving!");
@@ -37,43 +61,26 @@ public class ManuellaRegexR{
             return;
         }
 
-	if(manTitles.exists()){
-            System.out.println("The output file already exixts! Do you want to delete it? [Y/n]");
 
-            if(sc.next().charAt(0) == 'n' || sc.next().charAt(0) == 'N'){
-                System.out.println("'mkay then. Leavving. Please restart me when you are ready to commit to the goal.");
-                System.out.println("exiting...");  //TODO - again.. take user input instead of bitiching out and exiting. 
-                return;
-            }
-            
-            manTitles.delete();
-        }
+        while(fileReader.hasNext()){
+            String line = fileReader.nextLine();
 
-        FileWriter writer;
-        try{
-            manTitles.createNewFile();
-            writer = new FileWriter(manTitles);
-        }catch(IOException e){
-            System.out.println("File creation failed. Aborting...");
-            return;
-        }
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.find()) {
+                String match = matcher.group().trim();
 
-        
-        String old = "";
-        while(reader.hasNext()){
-            String line = reader.nextLine();
-            Matcher m = regPat.matcher(line);
-            if(m.matches()){
-                String title = m.group().trim();
-                if(title.length() < 2 || title.equals(old)) continue;
+                if (match.equals(oldTitle) || match.length() < 2) continue;
 
-                old = title;
-                try{
-                    writer.write(title);
-                }catch(IOException e){
-                    continue; //TODO - handle properly or just declare;
+                oldTitle = match;
+
+                if (isVerbose) System.out.println(line + '\n' + "\t -> " + match + '\n');
+                try {
+                    fileWriter.write(match + '\n');
+                }catch (IOException e){
+                    System.out.println("writing error");
                 }
             }
         }
+
     }
 }
