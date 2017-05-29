@@ -6,10 +6,13 @@
 F.A.Q.:
 
   - But Simmo, wouldn't it be faster to just type 'man' in a cli?
-    Yes. Yes, it would be.
+    <i>Yes. Yes, it would be.</i>
     
   - But Simmo, wouldn't it be more informative to google it?
-    Yeah, probably.
+    <i>Yeah, probably.</i>
     
   - Then, by the name of the God  Emperor of Mankind, why bother do this?
-    Why not ¯\_(ツ)_/¯    
+    <i>Why not</i> ¯\_(ツ)_/¯ 
+    
+  - What <i>is</i> a 'man page' anyway?
+    <a href=https://sim.o.bg/man.html>'ere ya go</a>
