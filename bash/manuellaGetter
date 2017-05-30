@@ -43,20 +43,33 @@
 	    echo -n '.'
 	done
 
-	echo -n ..:100%
+	echo -n .:100%
 	echo -ne "\n  :"
 
+	timer_start=$(date +%s)
+	prev_title="N/A"
 
 	#Harvest the output of the stored 'man' pages
 	for title in $man_titles
-	do	    ((counter++))
+	do
 
-	    man "$title" > "$output_directory/$file_prefix.$title" 2> /dev/null
-
+	    ((counter++))
 	    if (( counter>=progress )); then
 	        echo -ne \# 
 	        progress=$((progress + increment))
 	    fi
+
+	    if [ "$prev_title" == "$title" ];
+	        then continue;
+	    fi
+
+	    prev_title=$title
+
+	    man "$title" > "$output_directory/$file_prefix.$title" 2> /dev/null
+
 	done
+
+	timer_end=$(date +%s)
+	echo -e "with if loop: $((timer_end-timer_start)) \n" >> timer_log
 
 	echo -e "\n DONE"
