@@ -46,7 +46,7 @@
 	echo -n .:100%
 	echo -ne "\n  :"
 
-	timer_start=$(date +%s)
+	#timer_start=$(date +%s)
 	prev_title="N/A"
 
 	#Harvest the output of the stored 'man' pages
@@ -69,7 +69,7 @@
 
 	done
 
-	timer_end=$(date +%s)
-	echo -e "with if loop: $((timer_end-timer_start)) \n" >> timer_log
+	#timer_end=$(date +%s)
+	#echo -e "with if loop: $((timer_end-timer_start)) \n" >> timer_log
 
 	echo -e "\n DONE"
