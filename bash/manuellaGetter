@@ -1,0 +1,62 @@
+#!/bin/bash
+
+	#TODO(s):
+	#	-Optimization wanted: reward 1 000 Indian Rupees
+	#	-The 'progress bar' is.. well... somewhat barbaric and too aproximate.
+
+
+
+	output_directory="man"
+	file_prefix="man"
+
+
+
+	#Get all 'man' pages available on the machine
+	man_titles=$(apropos -r .+ | grep -oE ^[a-zA-Z0-9_]+)
+
+
+
+	#If the output directory doesn't exists, mkdir it
+	if [ ! -d $output_directory ];
+	    then mkdir $output_directory
+	fi
+
+
+
+	#Get total number of 'man' entries
+	title_count=`echo "$man_titles" | wc -l`
+
+
+
+	#Initialize ints used for progress tracking
+	counter=0
+	increment=$((title_count/100))
+	progress=0
+
+
+
+	#Print top of 'progress bar'
+	echo -n 0:%
+
+	for ((i=0;i<100;i++));
+	do
+	    echo -n '.'
+	done
+
+	echo -n ..:100%
+	echo -ne "\n  :"
+
+
+	#Harvest the output of the stored 'man' pages
+	for title in $man_titles
+	do	    ((counter++))
+
+	    man "$title" > "$output_directory/$file_prefix.$title" 2> /dev/null
+
+	    if (( counter>=progress )); then
+	        echo -ne \# 
+	        progress=$((progress + increment))
+	    fi
+	done
+
+	echo -e "\n DONE"
